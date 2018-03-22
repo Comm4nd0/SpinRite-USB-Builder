@@ -38,25 +38,27 @@ class GUI(ttk.Frame):
         style = ttk.Style()
         # global style changes
         style.configure(".", background='#333333', foreground='orange', anchor="center")
+        style.configure("orange.Horizontal.TProgressbar", foreground='#222222', background='#222222', )
         style.map("TButton", background=[('hover', '#222222')])
         style.map("TMenubutton", background=[('hover', '#222222')])
         style.map("TEntry", foreground=[('focus', 'blue2'), ('active', 'green2')])
         style.map("TCheckbutton", background=[('hover', '#222222')])
         style.map("TRadiobutton", background=[('hover', '#222222')])
 
-        heading = ttk.Label(self, text="Spinrite USB Creator", font=("Courier", 20))
+        heading = ttk.Label(self, text="Spinrite USB Creator", font=("Helvetica", 20))
         heading.grid(column=0, row=1, rowspan=1, columnspan=3, sticky='NWES')
 
-        self.body = ttk.Label(self, font=("Courier", 12), wraplength=520)
+        self.body = ttk.Label(self, font=("Helvetica", 12), wraplength=520)
         self.body['text'] = "Spinrite which has been created by Steve Gibson of grc.com is required to run " \
-                            "within an MsDOS environment. This tool will allow will create a bootable USB with your own " \
-                            "spinwrite.exe file contained within."
+                            "within an MsDOS environment. This tool will create a bootable USB with your own " \
+                            "spinwrite.exe file contained within.\n"
+
         self.body.grid(column=0, row=2, rowspan=1, columnspan=3, sticky='W', padx=5, pady=5)
 
         self.browse_files = ttk.Button(self, text="Add Spinrite.exe", command=self.add_exe, width=14, state='active')
         self.browse_files.grid(column=0, row=3, rowspan=1, columnspan=1, sticky='WENS', padx=5, pady=5)
 
-        self.spinwrite_exe_txt = ttk.Label(self, font=("Courier", 12))
+        self.spinwrite_exe_txt = ttk.Label(self, font=("Helvetica", 12))
         self.spinwrite_exe_txt['text'] = "No .exe selected"
         self.spinwrite_exe_txt.grid(column=1, row=3, rowspan=1, columnspan=2, sticky='W', padx=5, pady=5)
 
@@ -110,7 +112,7 @@ class GUI(ttk.Frame):
             except AttributeError as err:
                 print(err)
         except AttributeError:
-            self.exe_error = ttk.Label(self, font=("Courier", 12))
+            self.exe_error = ttk.Label(self, font=("Helvetica", 12))
             self.exe_error['text'] = "No Sinrite.exe selected!"
             self.exe_error.grid(column=1, row=11, rowspan=1, columnspan=1, sticky='N', padx=5, pady=5)
 
@@ -122,18 +124,20 @@ class GUI(ttk.Frame):
             except AttributeError as err:
                 print(err)
         else:
-            self.device_error = ttk.Label(self, font=("Courier", 12))
+            self.device_error = ttk.Label(self, font=("Helvetica", 12))
             self.device_error['text'] = "No device selected!"
             self.device_error.grid(column=1, row=12, rowspan=1, columnspan=1, sticky='N', padx=5, pady=5)
 
         if self.spinrite_path and device_path:
-            self.prog_bar = ttk.Progressbar(self, orient="horizontal", length=400, mode="determinate")
+            self.prog_bar = ttk.Progressbar(self, style="orange.Horizontal.TProgressbar",orient="horizontal", length=400, mode="determinate")
             self.prog_bar.grid(column=0, row=12, rowspan=1, columnspan=3, sticky='N', padx=5, pady=5)
 
             if not os.path.isdir('dos'):
                 os.mkdir('dos')
 
-        self.build_button.config(state="disabled")
+        self.browse_files.config(state='disabled')
+        self.build_button.config(state='disabled')
+        self.exit_button['text'] = 'Stop'
         self.build_thread = UsbBuild(self.queue, self.device, self.fname.name)
         self.build_thread.start()
         self.periodiccall()
@@ -143,7 +147,8 @@ class GUI(ttk.Frame):
         if self.build_thread.is_alive():
            self.after(100, self.periodiccall)
         else:
-            self.build_button.config(state="active")
+            pass
+            self.exit_button['text'] = 'Exit'
 
     def checkqueue(self):
         prog_jump = 11.1
