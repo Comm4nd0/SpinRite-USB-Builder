@@ -1,6 +1,6 @@
 def init():
     global ICON
-    ICON = 'zip.gif'
+    ICON = 'sr.gif'
 
 def center(master, win, width, height):
     """center the window on the screen"""
