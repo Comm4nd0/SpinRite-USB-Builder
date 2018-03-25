@@ -64,11 +64,15 @@ class GUI(ttk.Frame):
 
         devices = self.get_bootable_media()
         row = 4
+        col = 0
         self.var = tk.StringVar()
         for part in devices:
             self.part_radio = ttk.Radiobutton(self, text=part, variable=self.var, value=part)
-            self.part_radio.grid(column=0, row=row, rowspan=1, columnspan=2, sticky='WENS', padx=5, pady=5)
+            self.part_radio.grid(column=col, row=row, rowspan=1, columnspan=2, sticky='WENS', padx=5, pady=5)
             row += 1
+            if row == 7:
+                row = 4
+                col = 2
 
         #self.refresh_devices = ttk.Button(self, text="Refresh Devices", command=self.get_bootable_media, width=10, state='active')
         #self.refresh_devices.grid(column=0, row=10, rowspan=1, columnspan=1, sticky='WENS', padx=5, pady=5)
@@ -134,6 +138,8 @@ class GUI(ttk.Frame):
 
             if not os.path.isdir('dos'):
                 os.mkdir('dos')
+            if not os.path.isdir('mnt'):
+                os.mkdir('mnt')
 
         self.browse_files.config(state='disabled')
         self.build_button.config(state='disabled')
